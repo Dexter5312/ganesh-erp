@@ -82,7 +82,7 @@ function App() {
       
       <main className="p-8">
         {activeTab === 'inventory' && <Dashboard />}
-        {activeTab === 'workers' && <WorkerManagement />}
+        {activeTab === 'workers' && <WorkerManagement userRole={userRole} />}
         {activeTab === 'processes' && <ProcessManagement />}
         {activeTab === 'materials' && <MaterialLedger userRole={userRole} />}
         {activeTab === 'billing' && <Billing />}
