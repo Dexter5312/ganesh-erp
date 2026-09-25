@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const PurchaseOrders = () => {
   const [purchaseOrders, setPurchaseOrders] = useState([]);
+  const [inventoryItems, setInventoryItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     supplierName: '',
@@ -14,6 +15,7 @@ const PurchaseOrders = () => {
 
   useEffect(() => {
     fetchPOs();
+    fetchInventory();
   }, []);
 
   const fetchPOs = async () => {
@@ -24,6 +26,15 @@ const PurchaseOrders = () => {
       console.error('Error fetching purchase orders', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchInventory = async () => {
+    try {
+      const res = await axios.get('https://ganesh-erp.onrender.com/api/inventory');
+      setInventoryItems(res.data);
+    } catch (error) {
+      console.error('Error fetching inventory', error);
     }
   };
 
@@ -69,15 +80,20 @@ const PurchaseOrders = () => {
             className="p-2 border rounded"
             required
           />
-          <input
-            type="text"
-            name="materialName"
-            placeholder="Material Name"
-            value={formData.materialName}
-            onChange={handleChange}
-            className="p-2 border rounded"
-            required
-          />
+          <div className="flex">
+            <select
+              name="materialName"
+              value={formData.materialName}
+              onChange={handleChange}
+              className="p-2 border rounded w-full"
+              required
+            >
+              <option value="">Select Material from Inventory</option>
+              {inventoryItems.map(item => (
+                <option key={item._id} value={item.name}>{item.name}</option>
+              ))}
+            </select>
+          </div>
           <input
             type="number"
             name="quantity"

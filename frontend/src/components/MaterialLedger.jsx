@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const MaterialLedger = ({ userRole }) => {
   const [logs, setLogs] = useState([]);
+  const [inventoryItems, setInventoryItems] = useState([]);
   const [itemName, setItemName] = useState('');
   const [type, setType] = useState('IN');
   const [quantity, setQuantity] = useState('');
@@ -9,6 +10,7 @@ const MaterialLedger = ({ userRole }) => {
 
   useEffect(() => {
     fetchLogs();
+    fetchInventory();
   }, []);
 
   const fetchLogs = async () => {
@@ -17,6 +19,18 @@ const MaterialLedger = ({ userRole }) => {
       if (res.ok) {
         const data = await res.json();
         setLogs(data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchInventory = async () => {
+    try {
+      const res = await fetch('https://ganesh-erp.onrender.com/api/inventory');
+      if (res.ok) {
+        const data = await res.json();
+        setInventoryItems(data);
       }
     } catch (err) {
       console.error(err);
@@ -77,15 +91,25 @@ const MaterialLedger = ({ userRole }) => {
     <div>
       <div className="bg-white p-6 rounded-lg shadow-md mb-6">
         <h2 className="text-xl font-semibold mb-4">Log Material Movement</h2>
-        <form onSubmit={handleSubmit} className="flex gap-4 flex-wrap">
-          <input type="text" placeholder="Item Name" value={itemName} onChange={e => setItemName(e.target.value)} required className="border p-2 rounded" />
+        <form onSubmit={handleSubmit} className="flex gap-4 flex-wrap items-center">
+          <select 
+            value={itemName} 
+            onChange={e => setItemName(e.target.value)} 
+            required 
+            className="border p-2 rounded min-w-[200px]"
+          >
+            <option value="">Select Material...</option>
+            {inventoryItems.map(item => (
+              <option key={item._id} value={item.name}>{item.name} ({item.currentStock} in stock)</option>
+            ))}
+          </select>
           <select value={type} onChange={e => setType(e.target.value)} className="border p-2 rounded">
             <option value="IN">Material Came In</option>
             <option value="OUT">Material Went Out</option>
           </select>
-          <input type="number" placeholder="Quantity" value={quantity} onChange={e => setQuantity(e.target.value)} required className="border p-2 rounded" />
+          <input type="number" placeholder="Quantity" value={quantity} onChange={e => setQuantity(e.target.value)} required className="border p-2 rounded w-32" />
           <input type="text" placeholder="Notes (e.g. Sent to Forging)" value={notes} onChange={e => setNotes(e.target.value)} className="border p-2 rounded flex-grow" />
-          <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Log Movement</button>
+          <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded font-semibold whitespace-nowrap">Log Movement</button>
         </form>
       </div>
 
@@ -105,13 +129,13 @@ const MaterialLedger = ({ userRole }) => {
           <tbody>
             {logs.map(log => (
               <tr key={log._id} className="border-b hover:bg-gray-50">
-                <td className="p-3">{log.itemName}</td>
+                <td className="p-3 font-medium text-gray-800">{log.itemName}</td>
                 <td className={`p-3 font-bold ${log.type === 'IN' ? 'text-green-600' : 'text-red-600'}`}>
                   {log.type === 'IN' ? 'IN' : 'OUT'}
                 </td>
                 <td className="p-3">{log.quantity}</td>
                 <td className="p-3">{log.notes}</td>
-                <td className="p-3">{new Date(log.date).toLocaleDateString()}</td>
+                <td className="p-3 text-sm text-gray-600">{new Date(log.date).toLocaleDateString()}</td>
                 {userRole === 'admin' && (
                   <td className="p-3 text-right space-x-2">
                     <button 
