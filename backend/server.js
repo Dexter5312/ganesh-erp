@@ -38,25 +38,21 @@ app.use('/api/bills', billsRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/purchase-orders', purchaseOrdersRoutes);
 
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
 // db connection - using MongoDB Atlas
-const startServer = async () => {
+const connectDB = async () => {
   try {
     const mongoUri = process.env.MONGODB_URI;
-    if (!mongoUri) throw new Error("Missing MONGODB_URI in .env");
+    if (!mongoUri) throw new Error("Missing MONGODB_URI in Environment Variables");
     await mongoose.connect(mongoUri);
     console.log('Connected to MongoDB Atlas Cloud Database successfully');
-
-    // Clean start: No demo data seeded.
-
-
-
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
   } catch (err) {
-    console.error('Startup error:', err);
+    console.error('Database connection error:', err);
   }
 };
 
-startServer();
+connectDB();
