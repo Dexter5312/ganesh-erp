@@ -15,6 +15,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   const worker = new Worker({
     name: req.body.name,
+    role: req.body.role,
     hoursWorked: req.body.hoursWorked,
     dailyEfficiency: req.body.dailyEfficiency
   });

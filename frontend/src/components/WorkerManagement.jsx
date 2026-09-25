@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 const WorkerManagement = ({ userRole }) => {
   const [workers, setWorkers] = useState([]);
   const [name, setName] = useState('');
+  const [role, setRole] = useState('Machine Operator');
   const [hoursWorked, setHoursWorked] = useState('');
   const [dailyEfficiency, setDailyEfficiency] = useState('Excellent');
 
@@ -28,11 +29,12 @@ const WorkerManagement = ({ userRole }) => {
       const res = await fetch('https://ganesh-erp.onrender.com/api/workers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, hoursWorked: Number(hoursWorked), dailyEfficiency })
+        body: JSON.stringify({ name, role, hoursWorked: Number(hoursWorked), dailyEfficiency })
       });
       if (res.ok) {
         setName('');
         setHoursWorked('');
+        setRole('Machine Operator');
         setDailyEfficiency('Excellent');
         fetchWorkers();
       }
@@ -85,8 +87,19 @@ const WorkerManagement = ({ userRole }) => {
             value={name} 
             onChange={e => setName(e.target.value)} 
             required 
-            className="border p-2 rounded flex-grow" 
+            className="border p-2 rounded flex-grow min-w-[150px]" 
           />
+          <select 
+            value={role} 
+            onChange={e => setRole(e.target.value)} 
+            className="border p-2 rounded min-w-[150px]"
+          >
+            <option value="Machine Operator">Machine Operator</option>
+            <option value="Supervisor">Supervisor</option>
+            <option value="Welder">Welder</option>
+            <option value="Helper">Helper</option>
+            <option value="Technician">Technician</option>
+          </select>
           <input 
             type="number" 
             placeholder="Hours Worked" 
@@ -98,7 +111,7 @@ const WorkerManagement = ({ userRole }) => {
           <select 
             value={dailyEfficiency} 
             onChange={e => setDailyEfficiency(e.target.value)} 
-            className="border p-2 rounded w-40"
+            className="border p-2 rounded w-32"
           >
             <option value="Excellent">Excellent</option>
             <option value="Good">Good</option>
@@ -113,46 +126,50 @@ const WorkerManagement = ({ userRole }) => {
 
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold mb-4 border-b pb-2">Timesheet Records</h2>
-        <table className="min-w-full text-left">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="p-3">Name</th>
-              <th className="p-3">Hours Worked</th>
-              <th className="p-3">Efficiency</th>
-              <th className="p-3">Date</th>
-              {userRole === 'admin' && <th className="p-3 text-right">Actions</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {workers.map(w => (
-              <tr key={w._id} className="border-b hover:bg-gray-50">
-                <td className="p-3 font-medium">{w.name}</td>
-                <td className="p-3">{w.hoursWorked} hrs</td>
-                <td className="p-3 font-medium">
-                  {w.dailyEfficiency}
-                </td>
-                <td className="p-3">{new Date(w.date).toLocaleDateString()}</td>
-                {userRole === 'admin' && (
-                  <td className="p-3 text-right">
-                    <button 
-                      onClick={() => handleDelete(w._id)}
-                      className="text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                    >
-                      Delete
-                    </button>
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="p-3">Name</th>
+                <th className="p-3">Role</th>
+                <th className="p-3">Hours Worked</th>
+                <th className="p-3">Efficiency</th>
+                <th className="p-3">Date</th>
+                {userRole === 'admin' && <th className="p-3 text-right">Actions</th>}
+              </tr>
+            </thead>
+            <tbody>
+              {workers.map(w => (
+                <tr key={w._id} className="border-b hover:bg-gray-50">
+                  <td className="p-3 font-medium">{w.name}</td>
+                  <td className="p-3 text-gray-700">{w.role || 'General Worker'}</td>
+                  <td className="p-3">{w.hoursWorked} hrs</td>
+                  <td className="p-3 font-medium">
+                    {w.dailyEfficiency}
                   </td>
-                )}
-              </tr>
-            ))}
-            {workers.length === 0 && (
-              <tr>
-                <td colSpan={userRole === 'admin' ? "5" : "4"} className="p-3 text-center text-gray-500">
-                  No timesheets recorded yet.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+                  <td className="p-3 text-sm text-gray-600">{new Date(w.date).toLocaleDateString()}</td>
+                  {userRole === 'admin' && (
+                    <td className="p-3 text-right">
+                      <button 
+                        onClick={() => handleDelete(w._id)}
+                        className="text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  )}
+                </tr>
+              ))}
+              {workers.length === 0 && (
+                <tr>
+                  <td colSpan={userRole === 'admin' ? "6" : "5"} className="p-3 text-center text-gray-500">
+                    No timesheets recorded yet.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
