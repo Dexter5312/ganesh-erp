@@ -18,7 +18,7 @@ const PurchaseOrders = () => {
 
   const fetchPOs = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/purchase-orders');
+      const res = await axios.get('https://ganesh-erp.onrender.com/api/purchase-orders');
       setPurchaseOrders(res.data);
     } catch (error) {
       console.error('Error fetching purchase orders', error);
@@ -34,7 +34,7 @@ const PurchaseOrders = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/purchase-orders', formData);
+      await axios.post('https://ganesh-erp.onrender.com/api/purchase-orders', formData);
       setFormData({ supplierName: '', materialName: '', quantity: '', expectedDelivery: '', totalCost: '' });
       fetchPOs();
     } catch (error) {
@@ -44,7 +44,7 @@ const PurchaseOrders = () => {
 
   const handleUpdateStatus = async (id, newStatus) => {
     try {
-      await axios.put(`http://localhost:5000/api/purchase-orders/${id}/status`, { status: newStatus });
+      await axios.put(`https://ganesh-erp.onrender.com/api/purchase-orders/${id}/status`, { status: newStatus });
       fetchPOs();
     } catch (error) {
       console.error('Error updating status', error);

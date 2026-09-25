@@ -13,7 +13,7 @@ function UserManagement() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/users');
+      const response = await fetch('https://ganesh-erp.onrender.com/api/users');
       const data = await response.json();
       setUsers(data);
     } catch (err) {
@@ -30,7 +30,7 @@ function UserManagement() {
     setError('');
     setSuccess('');
     try {
-      const response = await fetch('http://localhost:5000/api/users', {
+      const response = await fetch('https://ganesh-erp.onrender.com/api/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -77,7 +77,7 @@ function UserManagement() {
       setError('');
       setSuccess('');
       try {
-        const response = await fetch('http://localhost:5000/api/users/bulk', {
+        const response = await fetch('https://ganesh-erp.onrender.com/api/users/bulk', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ users: usersToImport })

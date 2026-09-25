@@ -21,7 +21,7 @@ const Billing = () => {
 
   const fetchBills = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/bills');
+      const response = await fetch('https://ganesh-erp.onrender.com/api/bills');
       if (response.ok) {
         const data = await response.json();
         setBills(data);
@@ -61,7 +61,7 @@ const Billing = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/bills', {
+      const response = await fetch('https://ganesh-erp.onrender.com/api/bills', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -78,7 +78,7 @@ const Billing = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/bills/${id}`, {
+      const response = await fetch(`https://ganesh-erp.onrender.com/api/bills/${id}`, {
         method: 'DELETE'
       });
       if (response.ok) {
@@ -92,7 +92,7 @@ const Billing = () => {
   const handleStatusToggle = async (id, currentStatus) => {
     const newStatus = currentStatus === 'Pending' ? 'Paid' : 'Pending';
     try {
-      const response = await fetch(`http://localhost:5000/api/bills/${id}`, {
+      const response = await fetch(`https://ganesh-erp.onrender.com/api/bills/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })

@@ -12,7 +12,7 @@ const WorkerManagement = () => {
 
   const fetchWorkers = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/workers');
+      const res = await fetch('https://ganesh-erp.onrender.com/api/workers');
       if (res.ok) {
         const data = await res.json();
         setWorkers(data);
@@ -25,7 +25,7 @@ const WorkerManagement = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/workers', {
+      const res = await fetch('https://ganesh-erp.onrender.com/api/workers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, hoursWorked: Number(hoursWorked), dailyEfficiency })

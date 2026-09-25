@@ -13,7 +13,7 @@ const MaterialLedger = () => {
 
   const fetchLogs = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/material-logs');
+      const res = await fetch('https://ganesh-erp.onrender.com/api/material-logs');
       if (res.ok) {
         const data = await res.json();
         setLogs(data);
@@ -26,7 +26,7 @@ const MaterialLedger = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/material-logs', {
+      const res = await fetch('https://ganesh-erp.onrender.com/api/material-logs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ itemName, type, quantity: Number(quantity), notes })

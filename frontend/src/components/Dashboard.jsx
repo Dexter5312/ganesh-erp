@@ -11,7 +11,7 @@ const Dashboard = () => {
 
   const fetchInventory = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/inventory');
+      const response = await fetch('https://ganesh-erp.onrender.com/api/inventory');
       if (response.ok) {
         const data = await response.json();
         setInventory(data);
@@ -29,7 +29,7 @@ const Dashboard = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/inventory/${id}`, {
+      const response = await fetch(`https://ganesh-erp.onrender.com/api/inventory/${id}`, {
         method: 'DELETE'
       });
       if (response.ok) {

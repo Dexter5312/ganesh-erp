@@ -13,7 +13,7 @@ const ProcessManagement = () => {
 
   const fetchLogs = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/process-logs');
+      const res = await fetch('https://ganesh-erp.onrender.com/api/process-logs');
       if (res.ok) {
         const data = await res.json();
         setLogs(data);
@@ -26,7 +26,7 @@ const ProcessManagement = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/process-logs', {
+      const res = await fetch('https://ganesh-erp.onrender.com/api/process-logs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ processType, itemName, quantity: Number(quantity), operatorName })

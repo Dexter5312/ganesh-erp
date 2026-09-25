@@ -17,7 +17,7 @@ const AddItemForm = ({ onAdd }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/inventory', {
+      const response = await fetch('https://ganesh-erp.onrender.com/api/inventory', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
