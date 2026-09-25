@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const MaterialLedger = () => {
+const MaterialLedger = ({ userRole }) => {
   const [logs, setLogs] = useState([]);
   const [itemName, setItemName] = useState('');
   const [type, setType] = useState('IN');
@@ -42,6 +42,37 @@ const MaterialLedger = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this ledger entry?")) return;
+    try {
+      const res = await fetch(`https://ganesh-erp.onrender.com/api/material-logs/${id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) fetchLogs();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleEdit = async (log) => {
+    const newQty = window.prompt("Enter new quantity:", log.quantity);
+    if (newQty === null) return;
+    
+    const newNotes = window.prompt("Enter new notes:", log.notes);
+    if (newNotes === null) return;
+
+    try {
+      const res = await fetch(`https://ganesh-erp.onrender.com/api/material-logs/${log._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity: Number(newQty), notes: newNotes })
+      });
+      if (res.ok) fetchLogs();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div>
       <div className="bg-white p-6 rounded-lg shadow-md mb-6">
@@ -68,11 +99,12 @@ const MaterialLedger = () => {
               <th className="p-3">Quantity</th>
               <th className="p-3">Notes</th>
               <th className="p-3">Date</th>
+              {userRole === 'admin' && <th className="p-3 text-right">Actions</th>}
             </tr>
           </thead>
           <tbody>
             {logs.map(log => (
-              <tr key={log._id} className="border-b">
+              <tr key={log._id} className="border-b hover:bg-gray-50">
                 <td className="p-3">{log.itemName}</td>
                 <td className={`p-3 font-bold ${log.type === 'IN' ? 'text-green-600' : 'text-red-600'}`}>
                   {log.type === 'IN' ? 'IN' : 'OUT'}
@@ -80,9 +112,25 @@ const MaterialLedger = () => {
                 <td className="p-3">{log.quantity}</td>
                 <td className="p-3">{log.notes}</td>
                 <td className="p-3">{new Date(log.date).toLocaleDateString()}</td>
+                {userRole === 'admin' && (
+                  <td className="p-3 text-right space-x-2">
+                    <button 
+                      onClick={() => handleEdit(log)}
+                      className="text-sm bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded transition-colors"
+                    >
+                      Edit
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(log._id)}
+                      className="text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
-            {logs.length === 0 && <tr><td colSpan="5" className="p-3 text-center">No logs found</td></tr>}
+            {logs.length === 0 && <tr><td colSpan={userRole === 'admin' ? "6" : "5"} className="p-3 text-center text-gray-500">No logs found</td></tr>}
           </tbody>
         </table>
       </div>

@@ -77,7 +77,7 @@ function App() {
         {activeTab === 'inventory' && <Dashboard />}
         {activeTab === 'workers' && <WorkerManagement />}
         {activeTab === 'processes' && <ProcessManagement />}
-        {activeTab === 'materials' && <MaterialLedger />}
+        {activeTab === 'materials' && <MaterialLedger userRole={userRole} />}
         {activeTab === 'billing' && <Billing />}
         {activeTab === 'users' && <UserManagement />}
         {activeTab === 'purchase-orders' && <PurchaseOrders />}

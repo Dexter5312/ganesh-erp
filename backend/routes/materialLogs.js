@@ -28,4 +28,26 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.delete('/:id', async (req, res) => {
+  try {
+    await MaterialLog.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Log deleted' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.put('/:id', async (req, res) => {
+  try {
+    const updatedLog = await MaterialLog.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.json(updatedLog);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
 export default router;
