@@ -99,6 +99,45 @@ function UserManagement() {
     reader.readAsText(file);
   };
 
+  const handleDelete = async (id, username) => {
+    if (username === 'admin') {
+       alert("Cannot delete the master admin account!");
+       return;
+    }
+    if (!window.confirm(`Are you sure you want to delete user ${username}?`)) return;
+    try {
+      const res = await fetch(`https://ganesh-erp.onrender.com/api/users/${id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) fetchUsers();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleEdit = async (user) => {
+    if (user.username === 'admin') {
+       alert("Cannot edit the master admin account!");
+       return;
+    }
+    const newRole = window.prompt(
+      "Enter new role (admin, inventory, processes, materials, purchase-orders, billing, workers):", 
+      user.role
+    );
+    if (newRole === null || newRole.trim() === '') return;
+
+    try {
+      const res = await fetch(`https://ganesh-erp.onrender.com/api/users/${user._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: newRole.trim() })
+      });
+      if (res.ok) fetchUsers();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="bg-white p-6 rounded-xl shadow-md max-w-4xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">Admin User Management</h2>
@@ -182,12 +221,13 @@ function UserManagement() {
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {users.map((user) => (
                   <tr key={user._id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.username}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{user.username}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         user.role === 'admin' ? 'bg-purple-100 text-purple-800' :
@@ -197,11 +237,27 @@ function UserManagement() {
                         {user.role}
                       </span>
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-right space-x-2">
+                      <button 
+                        onClick={() => handleEdit(user)}
+                        disabled={user.username === 'admin'}
+                        className="text-yellow-600 hover:text-yellow-900 font-medium disabled:opacity-30"
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        onClick={() => handleDelete(user._id, user.username)}
+                        disabled={user.username === 'admin'}
+                        className="text-red-600 hover:text-red-900 font-medium disabled:opacity-30"
+                      >
+                        Delete
+                      </button>
+                    </td>
                   </tr>
                 ))}
                 {users.length === 0 && (
                   <tr>
-                    <td colSpan="2" className="px-6 py-4 text-center text-sm text-gray-500">No users found.</td>
+                    <td colSpan="3" className="px-6 py-4 text-center text-sm text-gray-500">No users found.</td>
                   </tr>
                 )}
               </tbody>
