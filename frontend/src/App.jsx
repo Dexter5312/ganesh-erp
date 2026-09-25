@@ -31,8 +31,11 @@ function App() {
           setIsLoggedIn(true);
           setUserRole(role);
           // Set initial tab based on role
-          if (role === 'billing') setActiveTab('billing');
-          else if (role === 'worker') setActiveTab('inventory');
+          if (role !== 'admin' && role !== 'worker') {
+            setActiveTab(role);
+          } else {
+            setActiveTab('inventory');
+          }
         }} 
         onForgotPassword={() => setShowForgotPassword(true)}
         onBack={() => setIsEntered(false)}
@@ -45,15 +48,19 @@ function App() {
       <nav className="bg-blue-600 p-4 text-white shadow-md flex justify-between items-center">
         <h1 className="text-2xl font-bold">Ganesh Engineering Industries - ERP</h1>
         <div className="space-x-4 flex items-center">
-          { (userRole === 'admin' || userRole === 'worker') && (
-            <>
-              <button type="button" onClick={() => setActiveTab('inventory')} className={activeTab === 'inventory' ? 'underline font-bold' : ''}>Inventory</button>
-              <button type="button" onClick={() => setActiveTab('processes')} className={activeTab === 'processes' ? 'underline font-bold' : ''}>Processes</button>
-              <button type="button" onClick={() => setActiveTab('materials')} className={activeTab === 'materials' ? 'underline font-bold' : ''}>Material Ledger</button>
-              <button type="button" onClick={() => setActiveTab('purchase-orders')} className={activeTab === 'purchase-orders' ? 'underline font-bold' : ''}>Purchase Orders</button>
-            </>
+          { (userRole === 'admin' || userRole === 'inventory' || userRole === 'worker') && (
+            <button type="button" onClick={() => setActiveTab('inventory')} className={activeTab === 'inventory' ? 'underline font-bold' : ''}>Inventory</button>
           )}
-          { userRole === 'admin' && (
+          { (userRole === 'admin' || userRole === 'processes' || userRole === 'worker') && (
+            <button type="button" onClick={() => setActiveTab('processes')} className={activeTab === 'processes' ? 'underline font-bold' : ''}>Processes</button>
+          )}
+          { (userRole === 'admin' || userRole === 'materials' || userRole === 'worker') && (
+            <button type="button" onClick={() => setActiveTab('materials')} className={activeTab === 'materials' ? 'underline font-bold' : ''}>Material Ledger</button>
+          )}
+          { (userRole === 'admin' || userRole === 'purchase-orders' || userRole === 'worker') && (
+            <button type="button" onClick={() => setActiveTab('purchase-orders')} className={activeTab === 'purchase-orders' ? 'underline font-bold' : ''}>Purchase Orders</button>
+          )}
+          { (userRole === 'admin' || userRole === 'workers') && (
             <button type="button" onClick={() => setActiveTab('workers')} className={activeTab === 'workers' ? 'underline font-bold' : ''}>Workers</button>
           )}
           { (userRole === 'admin' || userRole === 'billing') && (

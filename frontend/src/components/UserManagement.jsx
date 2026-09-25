@@ -140,9 +140,13 @@ function UserManagement() {
                 onChange={handleInputChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-50 px-3 py-2 border"
               >
-                <option value="admin">Admin</option>
-                <option value="worker">Worker</option>
-                <option value="billing">Billing</option>
+                <option value="admin">Admin (All Access)</option>
+                <option value="inventory">Inventory Only</option>
+                <option value="processes">Processes Only</option>
+                <option value="materials">Material Ledger Only</option>
+                <option value="purchase-orders">Purchase Orders Only</option>
+                <option value="billing">Billing Only</option>
+                <option value="workers">Workers/HR Only</option>
               </select>
             </div>
             <div className="flex gap-4">
